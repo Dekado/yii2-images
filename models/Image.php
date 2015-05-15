@@ -49,7 +49,7 @@ class Image extends \yii\db\ActiveRecord
         return $ext;
     }
 
-    public function getUrl($size = false, $watermark = false){
+    public function getUrl($size = false, $watermark = true){
         $urlSize = ($size) ? '_'.$size : '';
         if($watermark) {
 	        $url = Url::toRoute([
