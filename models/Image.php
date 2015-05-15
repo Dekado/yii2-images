@@ -49,13 +49,21 @@ class Image extends \yii\db\ActiveRecord
         return $ext;
     }
 
-    public function getUrl($size = false){
+    public function getUrl($size = false, $watermark = false){
         $urlSize = ($size) ? '_'.$size : '';
-        $url = Url::toRoute([
-            '/'.$this->getModule()->id.'/images/image-by-item-and-alias',
-            'item' => $this->modelName.$this->itemId,
-            'dirtyAlias' =>  $this->urlAlias.$urlSize.'.'.$this->getExtension()
-        ]);
+        if($watermark) {
+	        $url = Url::toRoute([
+	            '/'.$this->getModule()->id.'/images/image-by-item-and-alias',
+	            'item' => $this->modelName.$this->itemId,
+	            'dirtyAlias' =>  $this->urlAlias.$effectsPart.$urlSize.'.'.$this->getExtension()
+	        ]);
+        } else {
+        	$url = Url::toRoute([
+        			'/images-for-main-page-company/get-images-without-watermark',
+        			'item' => $this->modelName.$this->itemId,
+        			'dirtyAlias' =>  $this->urlAlias.$effectsPart.$urlSize.'.'.$this->getExtension()
+        	]);
+        }
 
         return $url;
     }
