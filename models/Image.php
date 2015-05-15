@@ -55,13 +55,13 @@ class Image extends \yii\db\ActiveRecord
 	        $url = Url::toRoute([
 	            '/'.$this->getModule()->id.'/images/image-by-item-and-alias',
 	            'item' => $this->modelName.$this->itemId,
-	            'dirtyAlias' =>  $this->urlAlias.$effectsPart.$urlSize.'.'.$this->getExtension()
+	            'dirtyAlias' =>  $this->urlAlias.$urlSize.'.'.$this->getExtension()
 	        ]);
         } else {
         	$url = Url::toRoute([
-        			'/images-for-main-page-company/get-images-without-watermark',
-        			'item' => $this->modelName.$this->itemId,
-        			'dirtyAlias' =>  $this->urlAlias.$effectsPart.$urlSize.'.'.$this->getExtension()
+        		'/images-without-watermark/get-images-without-watermark',
+        		'item' => $this->modelName.$this->itemId,
+        		'dirtyAlias' =>  $this->urlAlias.$urlSize.'.'.$this->getExtension()
         	]);
         }
 
