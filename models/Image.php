@@ -22,6 +22,7 @@ use \rico\yii2images\ModuleTrait;
 use rico\yii2images\effects\Gradient;
 use rico\yii2images\effects\BigGradient;
 use rico\yii2images\effects\GradientFromTop;
+use rico\yii2images\effects\Overlay;
 
 
 
@@ -53,6 +54,14 @@ class Image extends \yii\db\ActiveRecord
     {
         $gradient = new BigGradient;
         $this->effects[] = $gradient;
+        return $this;
+    }
+
+    public function setOverlay()
+    {
+        $overlay = new Overlay;
+        $this->effects[] = $overlay;
+
         return $this;
     }
 
@@ -268,11 +277,16 @@ class Image extends \yii\db\ActiveRecord
 
 
                 /* --=== Apply effects ===--- */
+
                 if(count($this->getModule()->effects) >0 && $effects){
                     foreach ($this->getModule()->effects as $effect) {
+
                         $pattern = '/'.preg_quote($effect['id'], '/').'/';
+
                         if(preg_match($pattern, $effect['id'])){
+
                             $effect = new $effect['class'];
+
                             $image = $effect->applyTo($image);
                         }
                     }
