@@ -71,7 +71,7 @@ class Image extends \yii\db\ActiveRecord
 
         $dirToRemove = $this->getModule()->getCachePath().DIRECTORY_SEPARATOR.$subDir;
 
-        if(preg_match('/'.preg_quote($this->modelName, '/').DIRECTORY_SEPARATOR, $dirToRemove)){
+        if(preg_match('/'.preg_quote($this->modelName, '/').'/', $dirToRemove)){
             BaseFileHelper::removeDirectory($dirToRemove);
 
         }
@@ -178,11 +178,11 @@ class Image extends \yii\db\ActiveRecord
         if(!$size['width']){
             $newWidth = $imageWidth*($size['height']/$imageHeight);
             $newSizes['width'] = intval($newWidth);
-            $newSizes['heigth'] = $size['height'];
+            $newSizes['height'] = $size['height'];
         }elseif(!$size['height']){
             $newHeight = intval($imageHeight*($size['width']/$imageWidth));
             $newSizes['width'] = $size['width'];
-            $newSizes['heigth'] = $newHeight;
+            $newSizes['height'] = $newHeight;
         }
 
         return $newSizes;
@@ -371,7 +371,7 @@ class Image extends \yii\db\ActiveRecord
     }
 
     protected function getSubDur(){
-        return $this->modelName. 's/' . $this->modelName.$this->itemId;
+        return \yii\helpers\Inflector::pluralize($this->modelName).'/'.$this->modelName.$this->itemId;
     }
 
 
@@ -392,6 +392,7 @@ class Image extends \yii\db\ActiveRecord
         return [
             [['filePath', 'itemId', 'modelName', 'urlAlias'], 'required'],
             [['itemId', 'isMain'], 'integer'],
+            [['name'], 'string', 'max' => 80],
             [['filePath', 'urlAlias'], 'string', 'max' => 400],
             [['modelName'], 'string', 'max' => 150]
         ];
