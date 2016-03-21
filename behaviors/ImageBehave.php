@@ -226,9 +226,11 @@ class ImageBehave extends Behavior
             $class = $this->getModule()->className;
             $imageQuery = $class::find();
         }
-        $finder = $this->getImagesFinder(['isMain' => 1]);
+        //$finder = $this->getImagesFinder(['isMain' => 1]);
+        $finder = $this->getImagesFinder();
         $imageQuery->where($finder);
-        $imageQuery->orderBy(['isMain' => SORT_DESC, 'id' => SORT_ASC]);
+        //$imageQuery->orderBy(['isMain' => SORT_DESC, 'id' => SORT_ASC]);
+        $imageQuery->orderBy(['sort' => SORT_ASC, 'id' => SORT_ASC]);
 
         $img = $imageQuery->one();
         if(!$img){
