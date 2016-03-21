@@ -148,6 +148,23 @@ class ImageBehave extends Behavior
         $this->owner->clearImagesCache();
     }
 
+    /*public function setSort($img, $sort)
+    {
+        if ($this->owner->primaryKey != $img->itemId) {
+            throw new \Exception('Image must belong to this model');
+        }
+        if(!is_int($sort)) {
+            throw new \Exception('Must be number');
+        }
+        /* @var $img Image */
+    /*    $img->sort = $sort;
+        $img->save();
+
+        $this->owner->clearImagesCache();
+    }*/
+
+
+
 
     /**
      * Clear all images cache (and resized copies)
@@ -186,7 +203,8 @@ class ImageBehave extends Behavior
             $imageQuery = $class::find();
         }
         $imageQuery->where($finder);
-        $imageQuery->orderBy(['isMain' => SORT_DESC, 'id' => SORT_ASC]);
+        //$imageQuery->orderBy(['isMain' => SORT_DESC, 'id' => SORT_ASC]);
+        $imageQuery->orderBy(['sort' => SORT_ASC, 'id' => SORT_ASC]);
 
         $imageRecords = $imageQuery->all();
         if(!$imageRecords){

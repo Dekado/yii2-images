@@ -8,6 +8,7 @@
  * @property string $filePath
  * @property integer $itemId
  * @property integer $isMain
+ * @property integer $sort
  * @property string $modelName
  * @property string $urlAlias
  */
@@ -287,7 +288,7 @@ class Image extends \yii\db\ActiveRecord
     {
         return [
             [['filePath', 'itemId', 'modelName', 'urlAlias'], 'required'],
-            [['itemId', 'isMain'], 'integer'],
+            [['itemId', 'isMain', 'sort'], 'integer'],
             [['filePath', 'urlAlias'], 'string', 'max' => 400],
             [['modelName'], 'string', 'max' => 150]
         ];
@@ -305,6 +306,7 @@ class Image extends \yii\db\ActiveRecord
             'isMain' => 'Is Main',
             'modelName' => 'Model Name',
             'urlAlias' => 'Url Alias',
+            'sort' => 'sort',
         ];
     }
 }

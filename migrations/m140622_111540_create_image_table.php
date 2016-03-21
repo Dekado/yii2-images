@@ -13,6 +13,7 @@ class m140622_111540_create_image_table extends \yii\db\Migration
             'isMain' => 'int(1)',
             'modelName' => 'VARCHAR(150) NOT NULL',
             'urlAlias' => 'VARCHAR(400) NOT NULL',
+            'sort' => 'int(3)',
         ]);
 
     }
