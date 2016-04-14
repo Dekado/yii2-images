@@ -29,9 +29,6 @@ class ImageBehave extends Behavior
     /**
      * @var ActiveRecord|null Model class, which will be used for storing image data in db, if not set default class(models/Image) will be used
      */
-    public $modelClass = null;
-
-
 
     /**
      *
@@ -42,7 +39,8 @@ class ImageBehave extends Behavior
      * @return bool|Image
      * @throws \Exception
      */
-    public function attachImage($absolutePath, $isMain = false, $type = false)
+    //public function attachImage($absolutePath, $isMain = false, $type = false)
+    public function attachImage($absolutePath, $isMain = false, $name = '', $type = false)
     {
         if(!preg_match('#http#', $absolutePath)){
             if (!file_exists($absolutePath)) {
@@ -52,8 +50,8 @@ class ImageBehave extends Behavior
             //nothing
         }
 
-        if (!$this->owner->id) {
-            throw new \Exception('Owner must have id when you attach image!');
+        if (!$this->owner->primaryKey) {
+            throw new \Exception('Owner must have primaryKey when you attach image!');
         }
 
         $pictureFileName =
@@ -72,21 +70,26 @@ class ImageBehave extends Behavior
 
         copy($absolutePath, $newAbsolutePath);
 
-        if (!file_exists($absolutePath)) {
+        if (!file_exists($newAbsolutePath)) {
             throw new \Exception('Cant copy file! ' . $absolutePath . ' to ' . $newAbsolutePath);
         }
 
-        if($this->modelClass === null) {
+        if ($this->getModule()->className === null) {
             $image = new models\Image;
-        }else{
-            $image = new ${$this->modelClass}();
+        } else {
+            $class = $this->getModule()->className;
+            $image = new $class();
         }
-        $image->itemId = $this->owner->id;
+        $image->itemId = $this->owner->primaryKey;
         $image->filePath = $pictureSubDir . '/' . $pictureFileName;
         $image->modelName = $this->getModule()->getShortClass($this->owner);
         if($type) {
             $image->type = $type;
         }
+        if($name) {
+            $image->name = $name;
+        }
+
 
         $image->urlAlias = $this->getAlias($image);
 
@@ -125,7 +128,7 @@ class ImageBehave extends Behavior
      */
     public function setMainImage($img)
     {
-        if ($this->owner->id != $img->itemId) {
+        if ($this->owner->primaryKey != $img->itemId) {
             throw new \Exception('Image must belong to this model');
         }
         $counter = 1;
@@ -183,8 +186,13 @@ class ImageBehave extends Behavior
     {
         $finder = $this->getImagesFinder();
 
-        $imageQuery = Image::find()
-            ->where($finder);
+        if ($this->getModule()->className === null) {
+            $imageQuery = Image::find();
+        } else {
+            $class = $this->getModule()->className;
+            $imageQuery = $class::find();
+        }
+        $imageQuery->where($finder);
         $imageQuery->orderBy(['isMain' => SORT_DESC, 'id' => SORT_ASC]);
 
         $imageRecords = $imageQuery->all();
@@ -201,9 +209,38 @@ class ImageBehave extends Behavior
      */
     public function getImage()
     {
+        if ($this->getModule()->className === null) {
+            $imageQuery = Image::find();
+        } else {
+            $class = $this->getModule()->className;
+            $imageQuery = $class::find();
+        }
         $finder = $this->getImagesFinder(['isMain' => 1]);
-        $imageQuery = Image::find()
-            ->where($finder);
+        $imageQuery->where($finder);
+        $imageQuery->orderBy(['isMain' => SORT_DESC, 'id' => SORT_ASC]);
+
+        $img = $imageQuery->one();
+        if(!$img){
+            return $this->getModule()->getPlaceHolder();
+        }
+
+        return $img;
+    }
+
+    /**
+     * returns model image by name
+     * @return array|null|ActiveRecord
+     */
+    public function getImageByName($name)
+    {
+        if ($this->getModule()->className === null) {
+            $imageQuery = Image::find();
+        } else {
+            $class = $this->getModule()->className;
+            $imageQuery = $class::find();
+        }
+        $finder = $this->getImagesFinder(['name' => $name]);
+        $imageQuery->where($finder);
         $imageQuery->orderBy(['isMain' => SORT_DESC, 'id' => SORT_ASC]);
 
         $img = $imageQuery->one();
@@ -252,7 +289,7 @@ class ImageBehave extends Behavior
     private function getImagesFinder($additionWhere = false)
     {
         $base = [
-            'itemId' => $this->owner->id,
+            'itemId' => $this->owner->primaryKey,
             'modelName' => $this->getModule()->getShortClass($this->owner)
         ];
 
