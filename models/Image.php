@@ -10,6 +10,7 @@
  * @property integer $isMain
  * @property string $modelName
  * @property string $urlAlias
+ * @property string $type
  */
 
 namespace rico\yii2images\models;
@@ -393,7 +394,8 @@ class Image extends \yii\db\ActiveRecord
             [['filePath', 'itemId', 'modelName', 'urlAlias'], 'required'],
             [['itemId', 'isMain'], 'integer'],
             [['filePath', 'urlAlias'], 'string', 'max' => 400],
-            [['modelName'], 'string', 'max' => 150]
+            [['modelName'], 'string', 'max' => 150],
+            [['type'], 'string', 'max' => 150]
         ];
     }
 

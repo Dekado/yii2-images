@@ -42,7 +42,7 @@ class ImageBehave extends Behavior
      * @return bool|Image
      * @throws \Exception
      */
-    public function attachImage($absolutePath, $isMain = false)
+    public function attachImage($absolutePath, $isMain = false, $type = false)
     {
         if(!preg_match('#http#', $absolutePath)){
             if (!file_exists($absolutePath)) {
@@ -84,7 +84,9 @@ class ImageBehave extends Behavior
         $image->itemId = $this->owner->id;
         $image->filePath = $pictureSubDir . '/' . $pictureFileName;
         $image->modelName = $this->getModule()->getShortClass($this->owner);
-
+        if($type) {
+            $image->type = $type;
+        }
 
         $image->urlAlias = $this->getAlias($image);
 
