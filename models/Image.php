@@ -393,7 +393,7 @@ class Image extends \yii\db\ActiveRecord
         return [
             [['filePath', 'itemId', 'modelName', 'urlAlias'], 'required'],
             [['itemId', 'isMain'], 'integer'],
-            [['name'], 'string', 'max' => 80],
+            //[['name'], 'string', 'max' => 80],
             [['filePath', 'urlAlias'], 'string', 'max' => 400],
             [['modelName'], 'string', 'max' => 150],
             [['type'], 'string', 'max' => 150]
