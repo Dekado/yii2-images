@@ -53,19 +53,34 @@ class ImageBehave extends Behavior
             throw new \Exception('Owner must have primaryKey when you attach image!');
         }
 
+        $extension = pathinfo($absolutePath, PATHINFO_EXTENSION);
+
+        if(!$extension && preg_match('#http#', $absolutePath)) {
+            $headerByLink = get_headers ($absolutePath);
+            foreach($headerByLink as $header) {
+                if(preg_match('/Content\-Type/', $header)) {
+
+                    if(preg_match('/\/(.)*$/', $header, $matches)) {
+                        $extension =  substr($matches[0], 1);
+                    }
+
+                }
+            }
+        }
+
         $pictureFileName =
             substr(md5(microtime(true) . $absolutePath), 4, 6)
             . '.' .
-            pathinfo($absolutePath, PATHINFO_EXTENSION);
+            $extension;
+
         $pictureSubDir = $this->getModule()->getModelSubDir($this->owner);
-        $storePath = $this->getModule()->getStorePath($this->owner);
+        $storePath = Yii::getAlias('@webroot').DIRECTORY_SEPARATOR.$this->getModule()->getStorePath($this->owner);
 
         $newAbsolutePath = $storePath .
             DIRECTORY_SEPARATOR . $pictureSubDir .
             DIRECTORY_SEPARATOR . $pictureFileName;
 
-        BaseFileHelper::createDirectory($storePath . DIRECTORY_SEPARATOR . $pictureSubDir,
-            0775, true);
+        BaseFileHelper::createDirectory($storePath . DIRECTORY_SEPARATOR . $pictureSubDir, 0775, true);
 
         copy($absolutePath, $newAbsolutePath);
 
