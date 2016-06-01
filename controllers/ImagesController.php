@@ -57,8 +57,10 @@ class ImagesController extends Controller
         }
 
         if($image){
-            header('Content-Type: image/jpg');
-            echo $image->getContent($this->getModule()->sizeToString($params['size']), $effects);
+            $headers = Yii::$app->response->headers;
+            $headers->set('Content-Type', 'image/'.$dotParts[1].'; charset=utf-8');
+            Yii::$app->response->format = \yii\web\Response::FORMAT_RAW;
+            return $image->getContent($this->getModule()->sizeToString($params['size']), $effects);
         }else{
             throw new \yii\web\HttpException(404, 'There is no images');
         }
