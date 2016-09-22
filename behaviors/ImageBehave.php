@@ -35,12 +35,14 @@ class ImageBehave extends Behavior
      * Method copies image file to module store and creates db record.
      *
      * @param $absolutePath
-     * @param bool $isFirst
+     * @param bool $isMain
+     * @param string $type
+     * @param number $id
      * @return bool|Image
      * @throws \Exception
      */
     //public function attachImage($absolutePath, $isMain = false, $type = false)
-    public function attachImage($absolutePath, $isMain = false, $type = false)
+    public function attachImage($absolutePath, $isMain = false, $type = false, $id = false)
     {
         if(!preg_match('#http#', $absolutePath)){
             if (!file_exists($absolutePath)) {
@@ -86,9 +88,9 @@ class ImageBehave extends Behavior
         if($type) {
             $image->type = $type;
         }
-        /*if($name) {
-            $image->name = $name;
-        }*/
+        if($id) {
+            $image->id_from_crm = $id;
+        }
 
 
         $image->urlAlias = $this->getAlias($image);
