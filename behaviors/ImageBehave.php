@@ -195,7 +195,8 @@ class ImageBehave extends Behavior
             $imageQuery = $class::find();
         }
         $imageQuery->where($finder);
-        $imageQuery->orderBy(['isMain' => SORT_DESC, 'id' => SORT_ASC]);
+        //$imageQuery->orderBy(['isMain' => SORT_DESC, 'id' => SORT_ASC]);
+        $imageQuery->orderBy(['isMain' => SORT_ASC]);
 
         $imageRecords = $imageQuery->all();
         if(!$imageRecords){
