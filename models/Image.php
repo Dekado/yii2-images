@@ -215,8 +215,8 @@ class Image extends \yii\db\ActiveRecord
                         throw new Exception('WaterMark not detected!');
                     }
 
-                    $wmMaxWidth = intval($image->get_width()*0.4);
-                    $wmMaxHeight = intval($image->get_height()*0.4);
+                    $wmMaxWidth = intval($image->get_width()*0.1);
+                    $wmMaxHeight = intval($image->get_height()*0.1);
 
                     $waterMarkPath = Yii::getAlias($this->getModule()->waterMark);
 
@@ -246,7 +246,7 @@ class Image extends \yii\db\ActiveRecord
 
                     }
 
-                    $image->overlay($waterMarkPath, 'center', .5, -10, -10);
+                    $image->overlay($waterMarkPath, 'center', 0.4, -10, -10);
 
                 }
 
