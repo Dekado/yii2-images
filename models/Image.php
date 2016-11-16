@@ -246,7 +246,7 @@ class Image extends \yii\db\ActiveRecord
 
                     }
 
-                    $image->overlay($waterMarkPath, 'bottom right', .5, -10, -10);
+                    $image->overlay($waterMarkPath, 'center', .5, -10, -10);
 
                 }
 
